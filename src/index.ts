@@ -1,18 +1,31 @@
 import "./index.css";
 
-import "./chapter-01";
+import { Observable } from 'rxjs';
 
-import { add } from "./common/math";
+let nums = [2, 4, 6, 9, 10];
 
-export class C {
-  private x = 17;
-  getX = () => this.x;
-  setX = (newVal: number) => {
-    this.x = newVal;
-  };
-}
+//let numsObservable$ = from (nums);
 
-export let x = new C();
-export let y = { ...{ some: "value" } };
+let evenNumbers$ = Observable.create((subscriber: { next: (arg0: number) => void; error: (arg0: string) => void; complete: () => void; }) => {
+    
+    for (let currentNum of nums) {
+        if (currentNum % 2 === 0) {
+            subscriber.next(currentNum);
+        } else {
+            subscriber.error('Value is not even');
+            
+        }
+    }
 
-console.log(add(3, 4));
+    subscriber.complete();
+})
+
+
+
+evenNumbers$.subscribe(
+    (value: any) => console.log(value),
+    (err: any) => console.log(`ERROR: ${err}`),
+    () => console.log('All done.'),
+);
+
+
